@@ -30,6 +30,8 @@ gem 'sneakers'
 gem 'dotenv-rails'
 gem 'sidekiq'
 gem 'pry', '~> 0.13.1'
+gem 'rest-client'
+gem 'fedex'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
