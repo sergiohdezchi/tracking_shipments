@@ -1,24 +1,23 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* Run rake task for rabbitmq setup
 
-Things you may want to cover:
+  rake rabbitmq:setup
+   
+* Run for migrate tables
 
-* Ruby version
+  rake db:migrate
 
-* System dependencies
+* Run rake task for fill Fedex Status Tables
 
-* Configuration
+  rake one_time_only:fill_carrier_status_shipment_model
 
-* Database creation
+* Run for sidekiq works
 
-* Database initialization
+  redis-server --daemonize yes
+  
+  bundle exec sidekiq -C config/sidekiq.yml
 
-* How to run the test suite
+* Run rabbitmq worker
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+  WORKERS=Rabbitmq::TrackingNumberWorker rake sneakers:run
