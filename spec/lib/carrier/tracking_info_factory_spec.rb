@@ -7,9 +7,10 @@ RSpec.describe Carrier::TrackingInfoFactory do
       let(:tracking_number) { '449044304137821' }
 
       it 'Should return status_code' do
-        tracking_info = described_class.create(carrier, tracking_number)
-
-        expect(tracking_info.status_code.present?).to eq(true)
+        VCR.use_cassette 'carrier/tracking_info_factory/fedex/success' do
+          tracking_info = described_class.create(carrier, tracking_number)
+          expect(tracking_info.status_code.present?).to eq(true)
+        end
       end
     end
 
@@ -29,9 +30,10 @@ RSpec.describe Carrier::TrackingInfoFactory do
       let(:tracking_number) { '555555555555555' }
 
       it 'Should return status_code' do
-        tracking_info = described_class.create(carrier, tracking_number)
-
-        expect(tracking_info.status_code).to eq(nil)
+        VCR.use_cassette 'carrier/tracking_info_factory/fedex/not_found' do
+          tracking_info = described_class.create(carrier, tracking_number)
+          expect(tracking_info.status_code).to eq(nil)
+        end
       end
     end
   end
