@@ -17,9 +17,13 @@ namespace :rabbitmq do
     conn.start
 
     ch = conn.create_channel
-    ch.fanout('shipment_events')
-    queue = ch.queue('shipment_tracking_queue', durable: true)
-    queue.bind('shipment_events')
+    ch.fanout(ENV['RABBITMQ_WORKER_EVENT'])
+    queue = ch.queue(ENV['RABBITMQ_WORKER_QUEUE'], durable: true)
+    queue.bind(ENV['RABBITMQ_WORKER_EVENT'])
+
+    ch.fanout(ENV['RABIITMQ_PUBLISHER_EVENT'])
+    queue2 = ch.queue(ENV['RABBITMQ_PUBLISHER_QUEUE'], durable: true)
+    queue2.bind(ENV['RABIITMQ_PUBLISHER_EVENT'])
 
     conn.close
   end

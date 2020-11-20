@@ -4,11 +4,7 @@ class Carrier::TrackingInfo::Fedex
 
   def initialize(tracking_number)
     @tracking_number = tracking_number
-    @key = Rails.application.secrets.fedex[:key]
-    @password = Rails.application.secrets.fedex[:password]
-    @account_number = Rails.application.secrets.fedex[:account_number]
-    @meter = Rails.application.secrets.fedex[:meter]
-    @mode = Rails.application.secrets.fedex[:mode]
+    @connection = client.connection
   end
 
   def status_code
@@ -17,7 +13,7 @@ class Carrier::TrackingInfo::Fedex
 
   def tracking_info
     begin
-      connection.track(:tracking_number => @tracking_number).first
+      @connection.track(:tracking_number => @tracking_number).first
     rescue Fedex::RateError => error
       Rails.logger.info("Tracking number not found: #{error}")
     end
@@ -25,13 +21,7 @@ class Carrier::TrackingInfo::Fedex
 
   private
 
-  def connection
-    ::Fedex::Shipment.new(
-      key: @key,
-      password: @password,
-      account_number: @account_number,
-      meter: @meter,
-      mode: @mode
-    )
+  def client
+    @client ||= ::Fedex::Client.new
   end
 end
