@@ -4,12 +4,13 @@ class Sidekiq::RequestTrakingStatusWorker
 
   def perform(carrier, tracking_number)
     tracking_info = ::Carrier::TrackingInfoFactory.create(carrier, tracking_number)
-  rescue ArgumentError
-
+    status_code = tracking_info.status_code
+  rescue ArgumentError => error
+    puts "ArgumentError: #{error}"
   rescue => error
     raise error
   else
-    publish_status(carrier, tracking_number, tracking_info.status_code)
+    publish_status(carrier, tracking_number, status_code)
   end
 
   private

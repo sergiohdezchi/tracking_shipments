@@ -14,6 +14,19 @@ RSpec.describe Carrier::TrackingInfoFactory do
       end
     end
 
+    context 'when tracking_number nil' do
+      let(:carrier) { 'FEDEX' }
+      let(:tracking_number) { }
+
+      it 'Should return status_code' do
+        VCR.use_cassette 'carrier/tracking_info_factory/fedex/tracking_number_nil' do
+          expect { described_class.create(carrier, tracking_number).status_code }.to raise_error { |error|
+            expect(error).to be_a(ArgumentError)
+          }
+        end
+      end
+    end
+
     context 'When carrier not exists' do
       let(:carrier) { 'FEDEXS' }
       let(:tracking_number) { '449044304137821' }
