@@ -8,6 +8,8 @@ class Carrier::TrackingInfo::Fedex
   end
 
   def status_code
+    raise ArgumentError.new("Tracking_number canot be nil") if @tracking_number.nil?
+
     tracking_info.try(:status_code)
   end
 
